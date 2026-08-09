@@ -18,7 +18,6 @@ async def process_video(client, message):
     
     output_pattern = f"output_{message.chat.id}_%03d.mp4"
     
-    # Yahan '-map 0:a?' use kiya gaya hai taaki agar video me sound na ho tab bhi error na aaye
     ffmpeg_cmd = [
         "ffmpeg", "-y", "-i", video_path,
         "-i", "logo.png", "-i", "watermark.png",
@@ -34,7 +33,8 @@ async def process_video(client, message):
     
     if process.returncode != 0:
         error_text = stderr.decode()[-400:]
-        await status_msg.edit_text(f"❌ FFmpeg Error aaya:\n`{error_text}`", parse_mode="markdown")
+        # Parse mode hata diya gaya hai taaki error crash na ho
+        await status_msg.edit_text(f"❌ FFmpeg Error aaya:\n{error_text}")
         if os.path.exists(video_path):
             os.remove(video_path)
         return
